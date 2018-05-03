@@ -1,14 +1,18 @@
 <template>
   <div class="home">
-    <img src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="row">
+      <button class="btn btn-outline-warning">View your Pokemon</button>
+      <button class="btn btn-outline-danger">Explore!</button>
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
 export default {
-  name: 'home',
   
 }
 </script>
+
+<style>
+
+</style>
