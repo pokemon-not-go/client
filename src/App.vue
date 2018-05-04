@@ -4,7 +4,9 @@
       <div class="col-12">
         <nav class="navbar justify-content-between navbar-light bg-dark">
           <strong><a class="navbar-brand navbar-nav mr-auto" href=""></a>Pokemon Not Go!</strong>
-          <div scope="public_profile,email" onlogin="checkLoginState()" class="fb-login-button" data-max-rows="1" data-size="small" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="true" data-use-continue-as="false"></div>
+          <button v-if="isLogin" class="btn btn-outline-light my-0" @click="gotoHome">Home</button>
+          <button v-if="isLogin" type="button" class="btn btn-danger my-2 my-sm-0" @click="doLogout">Logout</button>
+          <button v-else-if="!isLogin" type="button" scope="public_profile, email, gender" class="btn btn-primary my-2 my-sm-0" @click="openFbLoginDialog">Facebook Login</button>
         </nav>
       </div>
     </div>
@@ -41,24 +43,37 @@ export default {
 
     }
   },
-  created () {
-    
-  },
   computed: mapState([
     'isLogin'
   ]),
-  mounted(){
-    window.checkLoginState = this.checkLoginState
-  },
   methods: {
-    checkLoginState () {
-      FB.getLoginStatus(function(response) {
-        if(response.status === 'connected'){
-          FB.login(function (response){
-            
-          })
-        }
-      })
+    openFbLoginDialog () {
+      FB.login(this.checkLoginState, { scope: 'email' })
+    },
+    checkLoginState: function (response) {
+      let self = this
+      if (response.status === 'connected') {
+        FB.api('me', { fields: ['id','name', 'email', 'gender', 'link'] }, function(profile) {
+          self.$store.dispatch('loginUser', profile)
+          self.$store.commit('setLogin')
+          self.$router.push('/home')
+        });
+      } else if (response.status === 'not_authorized') {
+        // the user is logged in to Facebook, 
+        // but has not authenticated your app
+      } else {
+        // the user isn't logged in to Facebook.
+        alert('Please login!')
+        self.$router.push('/')
+      }
+    },
+    doLogout () {
+      localStorage.removeItem('FBToken')
+      this.$store.commit('setLogout')
+      this.$router.push('/')
+    },
+    gotoHome () {
+      this.$router.push('/home')
     }
   }
 }

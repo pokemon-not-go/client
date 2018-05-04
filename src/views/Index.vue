@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <img src="../assets/logo.png">
-    <h1 class="titleScreen">Pokemon Catching Simulator</h1>
+    <h1 class="titleScreen">Simple Pokemon Catching Game</h1>
   </div>
 </template>
 
@@ -9,7 +9,11 @@
 // @ is an alias to /src
 export default {
   name: 'home',
-  
+  created() {
+    if(localStorage.getItem('FBToken') != null){
+      this.$router.push('/home')
+    }
+  }
 }
 </script>
 
