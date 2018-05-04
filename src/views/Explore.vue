@@ -1,21 +1,60 @@
 <template>
   <div class="explore">
-        <img src="../assets/KantoPoke.png">
-    <div class="row">
-        <div class="loader"></div> 
+    <h3 class="mt-5">You Found a Wild Pokemon!</h3>
+    <div class="mainBody">
+      <h4>{{pokemon.name}}</h4>
+      <img class="pokemonImg" :src="pokemon.sprite">
+      <button class="btn btn-danger mt-3" @click="catchThatPokemon">Catch!</button>
+      <button class="btn btn-primary mt-2" @click="gotoHome">Run!</button>
     </div>
   </div>
 </template>
 
 <script>
-export default {
+import { mapState } from 'vuex'
 
+export default {
+  created() {
+    this.$store.dispatch('findPokemon', this.currentWeather)
+  },
+  computed: mapState([
+    'pokemon', 'currentWeather', 'user'
+  ]),
+  methods: {
+    gotoHome () {
+      this.$router.push('/home')
+    },
+    catchThatPokemon () {
+      let payload = {
+        pokemon: this.pokemon.name,
+        userId: this.user._id
+      }
+      console.log('masuk sini', payload)
+      this.$store.dispatch('catchPokemon', payload)
+      this.$router.push('/home')
+    }
+  }
 }
 </script>
 
 <style scoped>
-  img{
+
+  .mainBody{
+    display: flex;
+    flex-direction: column;
+    height: 50rem;
+    right: 50%;
+    justify-content: center;
+    margin: auto;
+    width: 30rem;
+  }
+  .exploring{
     height:100%;
+    width: 100%;
+  }
+
+  .pokemonImg{
+    height: auto;
     width: 100%;
   }
 

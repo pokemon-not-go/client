@@ -38,11 +38,6 @@ import { mapState } from 'vuex'
   }(document, 'script', 'facebook-jssdk'))
 
 export default {
-  data() {
-    return {
-
-    }
-  },
   computed: mapState([
     'isLogin'
   ]),

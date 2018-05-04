@@ -14,20 +14,28 @@
             </tr>
             <tr>
               <th scope="row">Started Journey At</th>
-              <td></td>
+              <td>{{user.createdAt}}</td>
             </tr>
           </table>
         </div>
       </div>
       <div class="col-12">
         <h3>List Of Pokemons Obtained</h3>
-        <div class="col-lg-3 col-sm-6 col-xs-12">
-          <div class="polaroid">
-            <img src="" alt="">
-            <div class="container">
-              <p>Pokemon Name</p>
-            </div>
-          </div>
+        <div class="pokemon-table">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="column">Number</th>
+                <th scope="column">Pokemon</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(pokemon, index) in user.pokemon" :key="index">
+                <td>{{index + 1}}</td>
+                <td>{{pokemon}}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

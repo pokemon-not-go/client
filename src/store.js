@@ -10,6 +10,7 @@ export default new Vuex.Store({
     user: {},
     token: '',
     currentWeather: '',
+    pokemon: {},
   },
   mutations: {
     setUserData (state, userData) {
@@ -23,7 +24,10 @@ export default new Vuex.Store({
     },
     setWeather (state, weatherData){
       state.currentWeather = weatherData.data.currentWeather
-    }
+    },
+    setPokemon (state, pokemon){
+      state.pokemon = pokemon.data.data
+    },
   },
   actions: {
     getWeatherData ({commit}) {
@@ -45,6 +49,42 @@ export default new Vuex.Store({
       })
       .catch(function(err){
         alert('something went wrong')
+        console.log(err)
+      })
+    },
+    findPokemon ({commit}, weather) {
+      axios.post('http://localhost:3000/pokemon/get-pokemon', {weather: weather})
+      .then(function(response){
+        commit('setPokemon', response)
+      })
+      .catch(function(err){
+        alert(err.message),
+        console.log(err)
+      })
+    },
+    catchPokemon ({dispatch}, payload) {
+      console.log('ini payload di action=====', payload)
+      axios.put('http://localhost:3000/pokemon/catch', {pokemon: payload.pokemon, id: payload.userId})
+      .then(function(response){
+        if(response.data.message != 'Success capture a pokemon'){
+          alert(response.data.message)
+        }else{
+          alert(response.data.message)
+          dispatch('getUserData', payload.userId)
+        }
+      })
+      .catch(function(err){
+        alert('error when capturing pokemon')
+        console.log(err)
+      })
+    },
+    getUserData ({commit}, userId) {
+      axios.get(`http://localhost:3000/index/user/${userId}`)
+      .then(function(userData){
+        commit('setUserData', userData)
+      })
+      .catch(function(err){
+        alert('Error while getting user data')
         console.log(err)
       })
     }
